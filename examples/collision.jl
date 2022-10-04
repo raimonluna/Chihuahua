@@ -18,6 +18,8 @@ out_file     = pwd() * "/collision_output_2.m"
 out_funcs_xz = ["mass", "charge"]
 out_every    = 10
 
+derivatives = "finite differences"
+
 #########################
 # LAUNCH RUN
 #########################

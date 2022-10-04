@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      4353,        114]
-NotebookOptionsPosition[      4119,        101]
-NotebookOutlinePosition[      4455,        116]
-CellTagsIndexPosition[      4412,        113]
+NotebookDataLength[      4457,        115]
+NotebookOptionsPosition[      4221,        102]
+NotebookOutlinePosition[      4559,        117]
+CellTagsIndexPosition[      4516,        114]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -33,7 +33,7 @@ Cell[BoxData[{
   RowBox[{"Import", "[", 
    RowBox[{
     RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
-    "\"\<collision_output.m\>\""}], "]"}], ";"}], "\[IndentingNewLine]", 
+    "\"\<collision_output_2.m\>\""}], "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"tab", " ", "=", 
    RowBox[{"Table", "[", 
@@ -97,10 +97,11 @@ Cell[BoxData[{
    3.873390804146983*^9}, {3.873479785031251*^9, 3.873479785940914*^9}, 
    3.873479837206563*^9, {3.873480286460595*^9, 3.873480296821*^9}, {
    3.873480337457602*^9, 3.873480365061047*^9}, {3.8734810102511*^9, 
-   3.873481016687705*^9}}]
+   3.873481016687705*^9}, {3.8738815855587482`*^9, 3.8738815859929256`*^9}, {
+   3.873881622794669*^9, 3.873881643771381*^9}}]
 },
 WindowSize->{1386, 752},
-WindowMargins->{{Automatic, 145}, {80, Automatic}},
+WindowMargins->{{Automatic, 192}, {-181, Automatic}},
 FrontEndVersion->"10.0 for Linux x86 (64-bit) (June 27, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -115,7 +116,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 3557, 79, 233, "Input"]
+Cell[558, 20, 3659, 80, 233, "Input"]
 }
 ]
 *)

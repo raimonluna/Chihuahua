@@ -10,6 +10,12 @@ include("physics.jl")
 include("analysis.jl")
 include("utils.jl")
 
+if derivatives == "finite differences"
+    D = D4th
+elseif derivatives == "spectral"
+    D = DFFT
+end 
+
 #########################
 # INTEGRATION
 #########################

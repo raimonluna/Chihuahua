@@ -6,11 +6,11 @@ end
 
 function ExportToMathematicaInterp(array::Array{Float64,2}, name)
     ret = string(name) * " = {"
-    
+
     for i = 1:size(array)[1]
         for j = 1:size(array)[2]
-            ret = ret * "{{" * string(x[i, 1, 1]) * ", " *
-                               string(z[1, 1, j]) * "}, " *
+            ret = ret * "{" * string(x[i, 1, 1]) * ", " *
+                               string(z[1, 1, j]) * ", " *
                        replace(string(array[i, j]), "e" => "*^") * "}"
 	     if i*j < size(array)[1]*size(array)[2]
 	        ret = ret * ", "

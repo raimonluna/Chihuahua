@@ -26,7 +26,8 @@ eff_time  = 0.0
 toc       = Inf
 
 # out = open(out_file, "w")
-
+# Remove possible existing file to avoid errors.
+try rm(out_file) catch end
 out   = h5open(out_file, "w")
 # Print the grid
 ggrid = g_create(out, "Grid")
@@ -34,10 +35,16 @@ write_dataset(ggrid, "x", x[:,1,1])
 write_dataset(ggrid, "y", y[1,:,1])
 write_dataset(ggrid, "z", z[1,1,:])
 write_dataset(ggrid, "t", Array(0.:dt*out_every:final_time))
+write_dataset(ggrid, "dIt", Int(floor(out_every)))
+write_dataset(ggrid, "Itmax", Int(floor(final_time/dt-1)))
 write_dataset(ggrid, "mu", mu)
+write_dataset(ggrid, "m0", m0)
+write_dataset(ggrid, "q0", q0)
 
 if initial == "Collision"
     X = Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
+elseif initial == "Collision_V"
+    X = Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
 elseif initial == "Single"
     X = Single_Gaussian(m0, q0, dm, dq, s)
 end

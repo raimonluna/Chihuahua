@@ -86,3 +86,28 @@ function Single_Gaussian(m0, q0, dm, dq, s)
 
     return X
 end
+
+function Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
+
+    X = zeros(Nx, Ny, Nz, 5)
+
+    dx,  dy,  dz  = x0
+    dvx, dvy, dvz = dv
+    sL1, sL2      = sL
+    sT1, sT2      = sT
+    exp1 = exp.(- ((x .- dx).^2 + (y .- dy).^2) ./ sT1 - (z .- dz).^2 ./ sL1)
+    exp2 = exp.(- ((x .+ dx).^2 + (y .- dy).^2) ./ sT2 - (z .+ dz).^2 ./ sL2)
+
+    m  = m0 .+ dm .* (exp1 + exp2)
+    vx = - dvx .* (exp1 - exp2)
+    vy = - dvy .* (exp1 - exp2)
+    vz = - dvz .* (exp1 - exp2)
+
+    X[:,:,:,1] = m
+    X[:,:,:,2] = q0 .+ dq .* (exp1 + n .* exp2)
+    X[:,:,:,3] = D(m, [1,0,0]) + m .* vx
+    X[:,:,:,4] = D(m, [0,1,0]) + m .* vy
+    X[:,:,:,5] = D(m, [0,0,1]) + m .* vz
+
+    return X
+end

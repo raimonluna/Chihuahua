@@ -42,3 +42,10 @@ function vz()
 
     return (p - D(m,[0,0,1]))./m
 end
+
+function Px()
+    m  = X[:,:,:,1]
+    p  = X[:,:,:,5]
+
+    return (p - D(m,[0,0,1]))./m
+end

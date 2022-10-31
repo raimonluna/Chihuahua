@@ -53,7 +53,7 @@ end
 #     return X
 # end
 
-function Gaussian(m0, q0, dm, dq, dp, x0, sL, sT)
+function Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
 
     X = zeros(Nx, Ny, Nz, 5)
 
@@ -65,10 +65,24 @@ function Gaussian(m0, q0, dm, dq, dp, x0, sL, sT)
     exp2 = exp.(- ((x .+ dx).^2 + (y .- dy).^2) ./ sT2 - (z .+ dz).^2 ./ sL2)
 
     X[:,:,:,1] = m0 .+ dm .* (exp1 + exp2)
-    X[:,:,:,2] = q0 .+ dq .* (exp1 + exp2)
+    X[:,:,:,2] = q0 .+ dq .* (exp1 + n .* exp2)
     X[:,:,:,3] = - dpx .* (exp1 - exp2)
     X[:,:,:,4] = - dpy .* (exp1 - exp2)
     X[:,:,:,5] = - dpz .* (exp1 - exp2)
+
+    return X
+end
+
+function Single_Gaussian(m0, q0, dm, dq, s)
+
+    X    = zeros(Nx, Ny, Nz, 5)
+    exp1 = exp.(- ((x).^2 + (y).^2 + (z).^2) ./ s)
+
+    X[:,:,:,1] = m0 .+ dm .* exp1
+    X[:,:,:,2] = q0 .+ dq .* exp1
+    X[:,:,:,3] .= 0
+    X[:,:,:,4] .= 0
+    X[:,:,:,5] .= 0
 
     return X
 end

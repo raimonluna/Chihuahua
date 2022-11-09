@@ -47,6 +47,8 @@ elseif initial == "Collision_V"
     X = Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
 elseif initial == "Single"
     X = Single_Gaussian(m0, q0, dm, dq, s)
+elseif initial == "Collision_1D"
+    X = Gaussian1D(m0, q0, dm, dq, dp, dz, s)
 end
 
 

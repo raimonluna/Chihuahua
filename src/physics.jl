@@ -111,3 +111,19 @@ function Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
 
     return X
 end
+
+function Gaussian1D(m0, q0, dm, dq, dp, dz, s)
+
+    X = zeros(Nx, Ny, Nz, 5)
+
+    exp1 = exp.(- (z .- dz).^2 ./ s)
+    exp2 = exp.(- (z .+ dz).^2 ./ s)
+
+    X[:,:,:,1]  = m0 .+ dm .* (exp1 + exp2)
+    X[:,:,:,2]  = q0 .+ dq .* (exp1 + exp2)
+    X[:,:,:,3] .= 0.
+    X[:,:,:,4] .= 0.
+    X[:,:,:,5]  = - dp .* (exp1 - exp2)
+
+    return X
+end

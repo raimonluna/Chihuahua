@@ -49,3 +49,21 @@ function Px()
 
     return (p - D(m,[0,0,1]))./m
 end
+
+function mDx()
+    m  = X[:,:,:,1]
+
+    return D(m,[1,0,0])
+end
+
+function mDy()
+    m  = X[:,:,:,1]
+
+    return D(m,[0,1,0])
+end
+
+function mDz()
+    m  = X[:,:,:,1]
+
+    return D(m,[0,0,1])
+end

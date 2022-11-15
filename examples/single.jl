@@ -1,25 +1,35 @@
 #########################
 # PARAMETERS
+#For opposite charge choose n to -1
 #########################
 derivatives = "spectral"
+#Collision_V build data with v and no initial p. The variable is the same p, but it refers to v in the initial data
 initial     = "Single"
 
-xrange = yrange = (-30., 30.)
-zrange = (-30., 30.)
-Nx, Ny, Nz = 48, 48, 48
+xrange = yrange = (-50., 50.)
+zrange = (-50., 50.)
+Nx, Ny, Nz = 50, 50, 150
 
-m0, q0, dm, dq = 0.5, 0.1, 50.0, 15.0
-s   = 4.
+m0, q0, dm, dq = 0.5, 0.0, 10.0, 3.0
+dp  = (0.0, 0.0, 30.0)
+x0  = (0.0, 0.0, 10.0)
+sL  = 10.
+sT  = 50.
 mu  = dm^0.25
 
-dt = 0.1 / mu
-final_time = 30 / mu + dt
+# dt = 0.1 / mu
+dt  = 0.05
+# final_time = 15 / mu + dt
+final_time = 30.
 
-directory    = "/Users/mikel.sanchez/Documents/Chihuahua/data/single/charged_brane/"
-filename     = "S_L_60_N_48_dm_50_dq_15_m0_0.5_q0_0.1_t_30_dt_0.1.m"
+directory    = "/Users/mikel.sanchez/Dropbox/Projects/data_Chihuahua/single_gaussian/"
+filename     = "Nxy-50-Nz-150-dp-30-dt-0.05.h5"
 out_file     = directory * filename
-out_funcs_xz = ["mass", "charge"]
-out_every    = Int((dt * mu)^-1)
+out_funcs_xz = ["mass", "charge", "vx", "vy", "vz"]
+# out_every    = Int((dt * mu)^-1)
+out_every    = Int(dt^-1/2)
+# out_every    = 1
+
 
 #########################
 # LAUNCH RUN

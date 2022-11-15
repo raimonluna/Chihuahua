@@ -73,16 +73,17 @@ function Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
     return X
 end
 
-function Single_Gaussian(m0, q0, dm, dq, s)
+function Single_Gaussian(m0, q0, dm, dq, dp, sL, sT)
 
-    X    = zeros(Nx, Ny, Nz, 5)
-    exp1 = exp.(- ((x).^2 + (y).^2 + (z).^2) ./ s)
+    X             = zeros(Nx, Ny, Nz, 5)
+    dpx, dpy, dpz = dp
+    exp1          = exp.(- (x.^2 + y.^2) ./ sT - z .^2 ./ sL)   
 
     X[:,:,:,1] = m0 .+ dm .* exp1
     X[:,:,:,2] = q0 .+ dq .* exp1
-    X[:,:,:,3] .= 0
-    X[:,:,:,4] .= 0
-    X[:,:,:,5] .= 0
+    X[:,:,:,3] = - dpx .* exp1
+    X[:,:,:,4] = - dpy .* exp1
+    X[:,:,:,5] = - dpz .* exp1
 
     return X
 end

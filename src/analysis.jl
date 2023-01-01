@@ -142,7 +142,7 @@ function neutral_entropy()
     v2  = vx.^2 + vy.^2 + vz.^2
     dm2 = D(m, [1,0,0]).^2 + D(m, [0,1,0]).^2 + D(m, [0,0,1]).^2
 
-    return -4*pi*(- 0.5 * m .* v2 - 0.5 * dm2 ./ m + m .* log.(m))
+    return 4*pi*(- 0.5 * m .* v2 - 0.5 * dm2 ./ m - m .* log.(m))
 end
 
 

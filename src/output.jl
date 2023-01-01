@@ -12,11 +12,11 @@ function initialize_outfiles()
     write_dataset(ggrid, "y", y[1,:,1])
     write_dataset(ggrid, "z", z[1,1,:])
 
-    funcs_array_xz = zeros(Nx, Nz, length(out_funcs_xz), Int(floor(final_time / (dt * out_every_xz))))
-    times_array_xz = zeros(Int(floor(final_time / (dt * out_every_xz))))
+    funcs_array_xz = zeros(Nx, Nz, length(out_funcs_xz), Int(floor(final_time / (dt * out_every_xz))) + 1)
+    times_array_xz = zeros(Int(floor(final_time / (dt * out_every_xz))) + 1)
      
-    funcs_array_center = zeros(length(out_funcs_center) + 1, Int(floor(final_time / (dt * out_every_center))))
-    funcs_array_avg    = zeros(length(out_funcs_avg) + 1,    Int(floor(final_time / (dt * out_every_avg))))
+    funcs_array_center = zeros(length(out_funcs_center) + 1, Int(floor(final_time / (dt * out_every_center))) + 1)
+    funcs_array_avg    = zeros(length(out_funcs_avg) + 1,    Int(floor(final_time / (dt * out_every_avg))) + 1)
 end
 
 function iteration_output()

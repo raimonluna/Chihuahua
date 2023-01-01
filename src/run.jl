@@ -40,12 +40,22 @@ toc       = Inf
 
 initialize_outfiles()
 
+println("")
+println("              /)-_-(\\   ")
+println("               (o o)    ")
+println("       .-----__/\\o/     Welcome to Chihuahua, the 4+1 large D solver")
+println("      /  __      /      for Einstein-Maxwell Equations in AdS space.")
+println("  \\__/\\ /  \\_\\ |/       Copyright (c) 2022")
+println("       \\\\     ||        Raimon Luna and Mikel Sanchez-Garitaonandia")
+println("       //     ||        https://github.com/raimonluna/Chihuahua")
+println("       |\\     |\\        ")
+println("")
 println("----------------------------------------------------------------------")
 println("Iteration   Time | et per min |      Mass density |    Charge density ")
 println("                 |            | minimum   maximum | minimum   maximum ")
 println("----------------------------------------------------------------------")
 
-while eff_time <= final_time
+while eff_time < final_time + dt/2
     global iteration, eff_time, toc
     tic = time()
 
@@ -56,12 +66,11 @@ while eff_time <= final_time
     
     iteration_output()
 
-    if eff_time < final_time
-        RK4_step!(X, dt)
-        iteration += 1
-        eff_time  += dt
-        toc = time() - tic
-    end
+    RK4_step!(X, dt)
+    iteration += 1
+    eff_time  += dt
+    
+    toc = time() - tic
 end
 
 terminate_outfiles()

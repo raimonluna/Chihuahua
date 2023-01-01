@@ -4,17 +4,30 @@
 
 using FFTW
 using Printf
+import Statistics
 using HDF5
 
 include("grid.jl")
 include("physics.jl")
 include("analysis.jl")
-include("utils.jl")
+include("output.jl")
 
 if derivatives == "finite differences"
     D = D4th
 elseif derivatives == "spectral"
     D = DFFT
+end
+
+if initial == "Collision"
+    X = Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
+elseif initial == "Collision_V"
+    X = Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
+elseif initial == "Single"
+    X = Single_Gaussian(m0, q0, dm, dq, dp, sL, sT)
+elseif initial == "Collision_1D"
+    X = Gaussian1D(m0, q0, dm, dq, dp, dz, s)
+elseif initial == "Sound"
+    X = Sound(k, m0, q0, dm, dq)
 end
 
 #########################
@@ -25,32 +38,7 @@ iteration = 0
 eff_time  = 0.0
 toc       = Inf
 
-# out = open(out_file, "w")
-# Remove possible existing file to avoid errors.
-try rm(out_file) catch end
-out   = h5open(out_file, "w")
-# Print the grid
-ggrid = g_create(out, "Grid")
-write_dataset(ggrid, "x", x[:,1,1])
-write_dataset(ggrid, "y", y[1,:,1])
-write_dataset(ggrid, "z", z[1,1,:])
-write_dataset(ggrid, "t", Array(0.:dt*out_every:final_time))
-write_dataset(ggrid, "dIt", Int(floor(out_every)))
-write_dataset(ggrid, "Itmax", Int(floor(final_time/dt-1)))
-write_dataset(ggrid, "mu", mu)
-write_dataset(ggrid, "m0", m0)
-write_dataset(ggrid, "q0", q0)
-
-if initial == "Collision"
-    X = Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
-elseif initial == "Collision_V"
-    X = Gaussian_V(m0, q0, dm, dq, dv, x0, sL, sT, n)
-elseif initial == "Single"
-    X = Single_Gaussian(m0, q0, dm, dq, dp, sL, sT)
-elseif initial == "Collision_1D"
-    X = Gaussian1D(m0, q0, dm, dq, dp, dz, s)
-end
-
+initialize_outfiles()
 
 println("----------------------------------------------------------------------")
 println("Iteration   Time | et per min |      Mass density |    Charge density ")
@@ -65,28 +53,16 @@ while eff_time <= final_time
     iteration, eff_time, 60*dt/toc,
     minimum(X[:,:,:,1]), maximum(X[:,:,:,1]),
     minimum(X[:,:,:,2]), maximum(X[:,:,:,2]))
+    
+    iteration_output()
 
-    # if iteration % out_every == 0
-    #     for func in out_funcs_xz
-    #         func_exec = @eval $(Symbol(func))
-    #         write(out, ExportToMathematicaInterp(func_exec()[:, Int(Ny/2) + 1, :, 1], func * "It" * string(iteration)))
-    #     end
-    # end
-    #HDF5 output
-    if iteration % out_every == 0
-        group = g_create(out, "It = " * string(iteration, pad = 3))
-        for func in out_funcs_xz
-            func_exec = @eval $(Symbol(func))
-            write_dataset(group, func, func_exec())
-        end
+    if eff_time < final_time
+        RK4_step!(X, dt)
+        iteration += 1
+        eff_time  += dt
+        toc = time() - tic
     end
-
-    RK4_step!(X, dt)
-    iteration += 1
-    eff_time  += dt
-
-    toc = time() - tic
 end
 
-close(out)
+terminate_outfiles()
 println("Done.")

@@ -32,26 +32,8 @@ function rhs(X)
 end
 
 #########################
-# INITIAL DATA
+# INITIAL DATA TYPES
 #########################
-#
-# function GaussianSymmetric(m0, q0, dm, dq, dp, x0, s)
-#
-#     X = zeros(Nx, Ny, Nz, 5)
-#
-#     dx,  dy,  dz  = x0
-#     dpx, dpy, dpz = dp
-#     exp1 = exp.(- ((x .- dx).^2 + (y .- dy).^2 + (z .- dz).^2) ./ s)
-#     exp2 = exp.(- ((x .+ dx).^2 + (y .+ dy).^2 + (z .+ dz).^2) ./ s)
-#
-#     X[:,:,:,1] = m0 .+ dm .* (exp1 + exp2)
-#     X[:,:,:,2] = q0 .+ dq .* (exp1 + exp2)
-#     X[:,:,:,3] = - dpx .* (exp1 - exp2)
-#     X[:,:,:,4] = - dpy .* (exp1 - exp2)
-#     X[:,:,:,5] = - dpz .* (exp1 - exp2)
-#
-#     return X
-# end
 
 function Gaussian(m0, q0, dm, dq, dp, x0, sL, sT, n)
 
@@ -128,3 +110,26 @@ function Gaussian1D(m0, q0, dm, dq, dp, dz, s)
 
     return X
 end
+
+function Sound(k, m0, q0, dm, dq)
+
+    X = zeros(Nx, Ny, Nz, 5)
+    
+    ap = 0.5 .* (1 .+ sqrt.(1 .- 2 .* q0.^2))
+    am = 0.5 .* (1 .- sqrt.(1 .- 2 .* q0.^2))
+
+    CosPert = cos.(k*z)
+    SinPert = sin.(k*z)
+    
+    X[:,:,:,1]  = m0 .+ dm .* CosPert
+    X[:,:,:,2]  = q0 .+ dq .* CosPert
+    X[:,:,:,3] .= 0.
+    X[:,:,:,4] .= 0.
+    X[:,:,:,5] .= 0.
+
+    return X
+end
+
+
+
+

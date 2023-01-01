@@ -15,23 +15,22 @@ Nx, Ny, Nz = 50, 50, 150
 #The variable is the same p, but it refers to v in the initial data.
 initial     = "Collision"
 
-m0, q0, dm, dq = 0.5, 0.0, 10.0, 3.0
+m0, q0, dm, dq = 0.5, 0.0, 10.0, 0.0
 dp  = (0.0, 0.0, 30.0)
-x0  = (2.0, 0.0, 10.0)
+x0  = (0.0, 0.0, 10.0)
 sL  = (10., 10.)
 sT  = (50., 50.)
-mu  = dm^0.25
 n   = 1 #For opposite charge choose n to -1
 
-dt  = 0.05
-final_time = 1.
+dt  = 0.1#0.05
+final_time = 30.
 
 #########################
 # Output
 #########################
 
 directory    = "/home/raimon/Downloads/"
-filename     = "Nxy-50-Nz-150-dx-2-dp-30-dt-0.05_L_100.h5"
+filename     = "neutral_onlate_dx_0.h5"
 out_file     = directory * filename
 
 out_funcs_xz = ["mass", "charge"]

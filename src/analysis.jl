@@ -10,60 +10,147 @@ function charge()
     return X[:,:,:,2]
 end
 
-function px()
+#########################
+# MOMENTA
+#########################
+
+function momentum_x()
     return X[:,:,:,3]
 end
 
-function py()
+function momentum_y()
     return X[:,:,:,4]
 end
 
-function pz()
+function momentum_z()
     return X[:,:,:,5]
 end
 
-function vx()
-    m  = X[:,:,:,1]
-    p  = X[:,:,:,3]
+#########################
+# VELOCITIES
+#########################
 
-    return (p - D(m,[1,0,0]))./m
+function velocity_x()
+    m  = X[:,:,:,1]
+    px = X[:,:,:,3]
+
+    return (px - D(m, [1,0,0]))./m
 end
 
-function vy()
+function velocity_y()
     m  = X[:,:,:,1]
-    p  = X[:,:,:,4]
+    py = X[:,:,:,4]
 
-    return (p - D(m,[0,1,0]))./m
+    return (py - D(m, [0,1,0]))./m
 end
 
-function vz()
+function velocity_z()
     m  = X[:,:,:,1]
-    p  = X[:,:,:,5]
+    pz = X[:,:,:,5]
 
-    return (p - D(m,[0,0,1]))./m
+    return (pz - D(m, [0,0,1]))./m
 end
 
-function Px()
-    m  = X[:,:,:,1]
-    p  = X[:,:,:,5]
+#########################
+# PRESSURES
+#########################
 
-    return (p - D(m,[0,0,1]))./m
+function pressure_x()
+    m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vx = velocity_x()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+    rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
+
+    return m .- rP .* D(vx, [1,0,0]) .- (rP .- rM) .* D(log.(m), [2,0,0])
 end
 
-function mDx()
+function pressure_y()
     m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vy = velocity_y()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+    rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
 
-    return D(m,[1,0,0])
+    return m .- rP .* D(vy, [0,1,0]) .- (rP .- rM) .* D(log.(m), [0,2,0])
 end
 
-function mDy()
+function pressure_z()
     m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vz = velocity_z()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+    rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
 
-    return D(m,[0,1,0])
+    return m .- rP .* D(vz, [0,0,1]) .- (rP .- rM) .* D(log.(m), [0,0,2])
 end
 
-function mDz()
+function pressure_hydro_x()
     m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vx = velocity_x()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
 
-    return D(m,[0,0,1])
+    return m .- rP .* D(vx, [1,0,0])
 end
+
+function pressure_hydro_y()
+    m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vy = velocity_y()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+
+    return m .- rP .* D(vy, [0,1,0]) 
+end
+
+function pressure_hydro_z()
+    m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    vz = velocity_z()
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+
+    return m .- rP .* D(vz, [0,0,1])
+end
+
+
+#########################
+# ENTROPIES
+#########################
+
+
+function charged_entropy()
+    m  = X[:,:,:,1]
+    q  = X[:,:,:,2]
+    
+    rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
+
+    return 4*pi*rP
+end
+
+function neutral_entropy()
+    m  = X[:,:,:,1]
+    vx = velocity_x()
+    vy = velocity_y()
+    vz = velocity_z()
+    
+    v2  = vx.^2 + vy.^2 + vz.^2
+    dm2 = D(m, [1,0,0]).^2 + D(m, [0,1,0]).^2 + D(m, [0,0,1]).^2
+
+    return -4*pi*(- 0.5 * m .* v2 - 0.5 * dm2 ./ m + m .* log.(m))
+end
+
+
+
+
+
+
+
+
+
+

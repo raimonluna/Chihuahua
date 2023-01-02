@@ -63,7 +63,7 @@ function pressure_x()
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
     rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vx, [1,0,0]) .- (rP .- rM) .* D(log.(m), [2,0,0])
+    return m .- 2 * rP .* D(vx, [1,0,0]) .- (rP .- rM) .* D(log.(m), [2,0,0])
 end
 
 function pressure_y()
@@ -74,7 +74,7 @@ function pressure_y()
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
     rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vy, [0,1,0]) .- (rP .- rM) .* D(log.(m), [0,2,0])
+    return m .- 2 * rP .* D(vy, [0,1,0]) .- (rP .- rM) .* D(log.(m), [0,2,0])
 end
 
 function pressure_z()
@@ -85,7 +85,7 @@ function pressure_z()
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
     rM    = 0.5 * (m - sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vz, [0,0,1]) .- (rP .- rM) .* D(log.(m), [0,0,2])
+    return m .- 2 * rP .* D(vz, [0,0,1]) .- (rP .- rM) .* D(log.(m), [0,0,2])
 end
 
 function pressure_hydro_x()
@@ -95,7 +95,7 @@ function pressure_hydro_x()
     
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vx, [1,0,0])
+    return m .- 2 * rP .* D(vx, [1,0,0])
 end
 
 function pressure_hydro_y()
@@ -105,7 +105,7 @@ function pressure_hydro_y()
     
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vy, [0,1,0]) 
+    return m .- 2 * rP .* D(vy, [0,1,0]) 
 end
 
 function pressure_hydro_z()
@@ -115,7 +115,7 @@ function pressure_hydro_z()
     
     rP    = 0.5 * (m + sqrt.(m.^2 .- 2*q.^2))
 
-    return m .- rP .* D(vz, [0,0,1])
+    return m .- 2 * rP .* D(vz, [0,0,1])
 end
 
 

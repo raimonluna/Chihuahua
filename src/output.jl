@@ -1,34 +1,20 @@
 function initialize_outfiles()
-    global out, funcs_array_xz, times_array_xz
-    global funcs_array_center, funcs_array_avg
+    global funcs_array_xz, funcs_array_center, funcs_array_avg
     
-    # Remove possible existing file to avoid errors.
-    try rm(out_file) catch end
-    out   = h5open(out_file, "w")
-
-    # Print the grid
-    ggrid = create_group(out, "Grid")
-    write_dataset(ggrid, "x", x[:,1,1])
-    write_dataset(ggrid, "y", y[1,:,1])
-    write_dataset(ggrid, "z", z[1,1,:])
-
-    funcs_array_xz = zeros(Nx, Nz, length(out_funcs_xz), Int(floor(final_time / (dt * out_every_xz))) + 1)
-    times_array_xz = zeros(Int(floor(final_time / (dt * out_every_xz))) + 1)
-     
+    funcs_array_xz = zeros(Nx, Nz, length(out_funcs_xz), length(out_iterations_xz))
     funcs_array_center = zeros(length(out_funcs_center) + 1, Int(floor(final_time / (dt * out_every_center))) + 1)
     funcs_array_avg    = zeros(length(out_funcs_avg) + 1,    Int(floor(final_time / (dt * out_every_avg))) + 1)
 end
 
 function iteration_output()
-    global out, funcs_array_xz, times_array_xz
-    global funcs_array_center, funcs_array_avg
+    global funcs_array_xz, funcs_array_center, funcs_array_avg
     
-    if iteration % out_every_xz == 0
-        j = Int(round(iteration / out_every_xz)) + 1
-        times_array_xz[j] = eff_time
-        for (i, func) in enumerate(out_funcs_xz)
-            func_exec = @eval $(Symbol(func))
-            funcs_array_xz[:, :, i, j] = func_exec()[:, Int(Ny/2) + 1, :]
+    for (j, it) in enumerate(out_iterations_xz)
+        if iteration == it
+            for (i, func) in enumerate(out_funcs_xz)
+                func_exec = @eval $(Symbol(func))
+                funcs_array_xz[:, :, i, j] = func_exec()[:, Int(Ny/2) + 1, :]
+            end
         end
     end
     
@@ -53,13 +39,25 @@ function iteration_output()
 end
 
 function terminate_outfiles()
-    global out, funcs_array_xz, times_array_xz
-    global funcs_array_center, funcs_array_avg
+    global funcs_array_xz, funcs_array_center, funcs_array_avg
     
-    group_xz = create_group(out, "out_vars_xz")
-    write_dataset(group_xz, "time", times_array_xz)
-    for (i, func) in enumerate(out_funcs_xz)
-        write_dataset(group_xz, func, funcs_array_xz[:, :, i, :])
+    # Remove possible existing file to avoid errors.
+    try rm(out_file) catch end
+    out   = h5open(out_file, "w")
+
+    # Print the grid
+    ggrid = create_group(out, "Grid")
+    write_dataset(ggrid, "x", x[:,1,1])
+    write_dataset(ggrid, "y", y[1,:,1])
+    write_dataset(ggrid, "z", z[1,1,:])
+    
+    # Print the run data
+    if (length(out_funcs_xz) > 0) & (length(out_iterations_xz) > 0)
+        group_xz = create_group(out, "out_vars_xz")
+        write_dataset(group_xz, "time", out_iterations_xz / dt)
+        for (i, func) in enumerate(out_funcs_xz)
+            write_dataset(group_xz, func, funcs_array_xz[:, :, i, :])
+        end
     end
     
     group_center = create_group(out, "out_vars_center")

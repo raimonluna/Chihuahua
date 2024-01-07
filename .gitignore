@@ -1,4 +1,5 @@
 output/images
+output_test
 *.m
 *.gif
 *.png

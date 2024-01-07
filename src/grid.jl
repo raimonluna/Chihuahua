@@ -47,7 +47,7 @@ function D4th(f, orders)
 	    term3 = (2/3)   * circshift(result, -1)
 	    term4 = (-1/12) * circshift(result, -2)
 	
-            result = (term1 + term2 + term3 + term4) / dy
+            result = (term1 + term2 + term3 + term4) / [dx, dy, dz][i]
         end
         result = permutedims(result, (2,3,1))
     end
